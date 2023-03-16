@@ -1,57 +1,40 @@
-async function getData(url) {
+document.addEventListener('DOMContentLoaded', async function() {
   try {
-    let result  = await fetch(url);
-    let data = await result.json();
+    const result = await fetch('https://jsonplaceholder.typicode.com/todos');
+    const data = await result.json();
 
-    let filteredDataA = data.filter(item => item.title.startsWith('a'));
-    console.log(filteredDataA);
+    const filteredDataA = data.filter(item => item.title.startsWith('a'));
+    const filteredDataAB = data.filter(item => item.title.startsWith('ab'));
 
-    let filteredDataAB = data.filter(item => item.title.startsWith('ab'));
-    console.log(filteredDataAB);
-
+    let userDivA = document.querySelector('.user-a');
+    let userDivAB = document.querySelector('.user-ab');
     let buttonA = document.querySelector('.add-a');
     let buttonAB = document.querySelector('.add-ab');
     let buttonAll = document.querySelector('.add-all');
 
-    buttonA.addEventListener('click', function(event){
-      event.preventDefault(); 
+    function displayData(filteredData, element) {
+      let myJson = filteredData.map(item => JSON.stringify(item)).join('<br>');
+      element.innerHTML = myJson;
+    }
 
-      let myJsonA = JSON.stringify(filteredDataA);
-      myJsonA = filteredDataA.map(item => JSON.stringify(item)).join('<br>');
-      let userDivA = document.querySelector('.user-a');
-      userDivA.innerHTML = myJsonA;
+    buttonA.addEventListener('click', function(event) {
+      userDivAB.innerHTML = '';
+      displayData(filteredDataA, userDivA);
+    });
 
-    }) 
+    buttonAB.addEventListener('click', function(event) {
+      userDivA.innerHTML = '';
+      displayData(filteredDataAB, userDivAB);
+    });
 
-    buttonAB.addEventListener('click', function(event){
-      event.preventDefault(); 
-
-      let myJsonAB = JSON.stringify(filteredDataAB);
-      myJsonAB = filteredDataAB.map(item => JSON.stringify(item)).join('<br>');
-      let userDivAB = document.querySelector('.user-ab');
-      userDivAB.innerHTML = myJsonAB;
+    buttonAll.addEventListener('click', function(event) {
+      userDivA.innerHTML = '';
+      userDivAB.innerHTML = '';
+      displayData(filteredDataA, userDivA);
+      displayData(filteredDataAB, userDivAB);
+    });
     
-    }) 
-    
-    buttonAll.addEventListener('click', function(event){
-      event.preventDefault(); 
-
-      let myJsonA = JSON.stringify(filteredDataA);
-      myJsonA = filteredDataA.map(item => JSON.stringify(item)).join('<br>');
-      let userDivA = document.querySelector('.user-a');
-      userDivA.innerHTML = myJsonA;
-
-      let myJsonAB = JSON.stringify(filteredDataAB);
-      myJsonAB = filteredDataAB.map(item => JSON.stringify(item)).join('<br>');
-      let userDivAB = document.querySelector('.user-ab');
-      userDivAB.innerHTML = myJsonAB;
-  
-    }) 
-  } 
-
-  catch (error) {
+  } catch (error) {
     console.error(error);
   }
-}
-getData('https://jsonplaceholder.typicode.com/todos');
-
+});
